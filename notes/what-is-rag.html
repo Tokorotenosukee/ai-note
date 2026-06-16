@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLMのRAGとは何か - AI Notes</title>
+  <meta name="description" content="LLMのRAGの仕組み、使いどころ、注意点をまとめた記事です。">
+  <link rel="stylesheet" href="../styles/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <p class="site-kicker"><a href="../index.html">AI Notes</a></p>
+      <h1>LLMのRAGとは何か</h1>
+      <p class="article-meta">作成日: <time datetime="2026-06-16">2026-06-16</time></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <article class="article">
+      <section class="summary-box" aria-labelledby="summary">
+        <h2 id="summary">3行まとめ</h2>
+        <ul>
+          <li>RAGは、LLMが答える前に外部資料を検索し、その内容を根拠として回答を作る設計です。</li>
+          <li>社内文書、FAQ、仕様書、最新情報など、モデルの学習済み知識だけでは足りない場面に向いています。</li>
+          <li>便利ですが、検索結果の質、権限管理、古い資料、誤読の問題があるため、幻覚を完全になくす仕組みではありません。</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>RAGとは</h2>
+        <p>
+          RAGは Retrieval-Augmented Generation の略で、日本語では「検索拡張生成」と説明されることが多い技術です。
+          LLMにそのまま質問するのではなく、まず質問に関係しそうな文書を検索し、その検索結果をプロンプトに追加してから回答を生成します。
+        </p>
+        <p>
+          元になった考え方は、2020年の論文
+          <cite>Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</cite>
+          で整理されています。この論文では、LLM内部に保存された知識だけに頼るのではなく、
+          Wikipediaのような外部の検索可能な知識源を組み合わせることで、知識集約的なタスクに対応しやすくする方法が示されました。
+        </p>
+      </section>
+
+      <section>
+        <h2>基本の仕組み</h2>
+        <p>
+          典型的なRAGは、次の流れで動きます。
+        </p>
+        <ol>
+          <li>文書を小さな単位に分割する</li>
+          <li>各文書片を検索しやすい形に変換し、検索用のインデックスへ保存する</li>
+          <li>ユーザーの質問を受け取る</li>
+          <li>質問に近い文書片を検索する</li>
+          <li>検索された文書片をLLMへの入力に追加する</li>
+          <li>LLMが、質問と検索結果をもとに回答を生成する</li>
+        </ol>
+        <p>
+          最近の実装では、ベクトル検索だけでなく、キーワード検索やハイブリッド検索を組み合わせることもあります。
+          OpenAIのRetrieval APIでも、検索対象のファイルをチャンク化、埋め込み、インデックス化するための
+          vector store が説明されています。Microsoft Azure AI Searchの解説でも、RAGはLLMの回答を独自コンテンツに接地するパターンとして説明されています。
+        </p>
+      </section>
+
+      <section>
+        <h2>何がうれしいのか</h2>
+        <p>
+          RAGの一番の利点は、LLMの学習時点に含まれていない情報を使いやすくなることです。
+          たとえば、社内規程、製品マニュアル、顧客向けFAQ、研究メモ、法律や制度の更新情報などは、
+          モデルを再学習させるより、外部文書として検索させる方が管理しやすい場合があります。
+        </p>
+        <p>
+          もう一つの利点は、回答の根拠を示しやすいことです。検索された文書を参考URLや引用元として提示できれば、
+          利用者は「どの資料をもとに答えたのか」を確認できます。これは、単にLLMが自信ありげに答えるよりも検証しやすい形です。
+        </p>
+      </section>
+
+      <section>
+        <h2>向いている使いどころ</h2>
+        <p>
+          RAGは、情報源が明確で、回答の根拠を確認したい場面に向いています。
+        </p>
+        <ul>
+          <li>社内文書やナレッジベースを検索して答える社内チャットボット</li>
+          <li>製品マニュアルや仕様書をもとにしたサポート回答</li>
+          <li>大量のPDF、議事録、調査メモから必要な箇所を探す個人用アシスタント</li>
+          <li>頻繁に更新される情報を、モデルの再学習なしに参照させたい場合</li>
+          <li>回答に参考URLや根拠文書を添えたい調査ワークフロー</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>向いていないこと</h2>
+        <p>
+          RAGは万能ではありません。検索対象の文書に答えがない場合、RAGを使っても正しい回答は出ません。
+          また、検索された資料が古い、矛盾している、文脈を切り落としすぎている場合、LLMはそれを誤って解釈することがあります。
+        </p>
+        <p>
+          Microsoftの解説では、RAGの課題として、曖昧な質問の理解、複数データ源へのアクセス、トークン制約、
+          応答速度、セキュリティとガバナンスが挙げられています。つまり、RAGの品質はLLMだけでなく、
+          文書整備、検索設計、アクセス権限、評価方法に大きく左右されます。
+        </p>
+      </section>
+
+      <section>
+        <h2>個人用途での考え方</h2>
+        <p>
+          個人で使うなら、RAGは「自分の資料をAIに読ませるための検索付きメモ棚」と考えると分かりやすいです。
+          たとえば、このAI Notesの記事が増えてきたら、将来的には記事本文を検索対象にして、
+          「前に調べたNISAの記事をもとに、要点を教えて」のように質問できます。
+        </p>
+        <p>
+          ただし、最初から複雑なRAG基盤を作る必要はありません。まずはHTML記事として信頼できる調査結果を貯めることが重要です。
+          良いRAGを作るには、検索対象となる文書そのものが整理され、出典が明確で、あとから読み返せる形になっている必要があります。
+        </p>
+      </section>
+
+      <section>
+        <h2>参考URL</h2>
+        <ul class="reference-list">
+          <li><a href="https://arxiv.org/abs/2005.11401" rel="noopener">Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</a></li>
+          <li><a href="https://aws.amazon.com/what-is/retrieval-augmented-generation/" rel="noopener">AWS: What is RAG?</a></li>
+          <li><a href="https://developers.openai.com/api/docs/guides/retrieval" rel="noopener">OpenAI API docs: Retrieval</a></li>
+          <li><a href="https://learn.microsoft.com/en-us/azure/search/retrieval-augmented-generation-overview" rel="noopener">Microsoft Learn: Retrieval-augmented generation in Azure AI Search</a></li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p><a href="../index.html">トップへ戻る</a></p>
+    </div>
+  </footer>
+</body>
+</html>
