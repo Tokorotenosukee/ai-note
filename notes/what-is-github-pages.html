@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub Pagesとは何か - AI Notes</title>
+  <meta name="description" content="GitHub Pagesの仕組み、使いどころ、公開時の注意点をまとめた記事です。">
+  <link rel="stylesheet" href="../styles/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <p class="site-kicker"><a href="../index.html">AI Notes</a></p>
+      <h1>GitHub Pagesとは何か</h1>
+      <p class="article-meta">作成日: <time datetime="2026-06-16">2026-06-16</time></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <article class="article">
+      <section class="summary-box" aria-labelledby="summary">
+        <h2 id="summary">3行まとめ</h2>
+        <ul>
+          <li>GitHub Pagesは、GitHubリポジトリ内のHTML、CSS、JavaScriptなどをWebサイトとして公開する静的ホスティング機能です。</li>
+          <li>個人サイト、プロジェクト紹介、ドキュメント、今回のAI Notesのような静的ナレッジベースに向いています。</li>
+          <li>公開されたPagesサイトはインターネット上から見えるため、秘密情報や個人情報を置かない運用が重要です。</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>GitHub Pagesとは</h2>
+        <p>
+          GitHub Pagesは、GitHubが提供する静的サイトホスティング機能です。
+          GitHub公式ドキュメントでは、リポジトリ内のHTML、CSS、JavaScriptファイルをそのまま、またはビルド処理を通してWebサイトとして公開できるサービスと説明されています。
+        </p>
+        <p>
+          通常のWebアプリのようにサーバー側でデータベース処理をしたり、ユーザーごとにページを生成したりするものではありません。
+          あらかじめ置かれた静的ファイルを配信する仕組みなので、構成が単純で、個人サイトやドキュメント公開に向いています。
+        </p>
+      </section>
+
+      <section>
+        <h2>公開されるURL</h2>
+        <p>
+          GitHub Pagesには、大きく分けてユーザー・組織サイトとプロジェクトサイトがあります。
+          ユーザーサイトは通常 <code>&lt;owner&gt;.github.io</code> という名前のリポジトリから公開され、
+          プロジェクトサイトは各リポジトリごとに公開されます。
+        </p>
+        <p>
+          たとえば、このAI Notesのように <code>ai-note</code> というリポジトリをプロジェクトサイトとして公開する場合、
+          標準的なURLは <code>https://tokorotenosukee.github.io/ai-note/</code> のようになります。
+          独自ドメインを設定することもできます。
+        </p>
+      </section>
+
+      <section>
+        <h2>どうやって公開するか</h2>
+        <p>
+          GitHub Pagesの公開元は、特定のブランチとフォルダに設定できます。
+          ビルド処理を細かく制御する必要がない場合、公式ドキュメントでは、特定ブランチへのpushをきっかけに公開する方法が案内されています。
+        </p>
+        <p>
+          このリポジトリのようにHTMLとCSSだけで構成している場合は、GitHubのリポジトリ設定から
+          <code>Pages</code> を開き、Sourceを <code>Deploy from a branch</code>、
+          Branchを <code>main</code>、Folderを <code>/(root)</code> にするのが分かりやすいです。
+          その後、<code>main</code> にpushした内容がPagesサイトへ反映されます。
+        </p>
+      </section>
+
+      <section>
+        <h2>何に向いているか</h2>
+        <p>
+          GitHub Pagesは、更新頻度が高すぎず、静的ファイルとして配れる情報に向いています。
+          たとえば、以下のような用途です。
+        </p>
+        <ul>
+          <li>個人プロフィールやポートフォリオ</li>
+          <li>OSSや小さなプロジェクトのドキュメント</li>
+          <li>ブログや読書ノートのような静的記事</li>
+          <li>HTML、CSS、画像だけで作る小規模サイト</li>
+          <li>AI Notesのような個人ナレッジベース</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>向いていないこと</h2>
+        <p>
+          GitHub Pagesは静的ホスティングなので、ログイン機能、会員ごとの非公開ページ、サーバー側の決済処理、
+          データベース更新を伴うアプリには向いていません。
+          GitHubの制限ページでも、パスワードやクレジットカード番号の送信のような機密性の高い取引には使うべきではないと説明されています。
+        </p>
+        <p>
+          また、GitHub Pagesは無料の汎用WebホスティングとしてオンラインビジネスやSaaSを運営する用途を想定したものではありません。
+          大量トラフィック、大容量ファイル、頻繁なビルドが必要な場合は、別のホスティングサービスを検討した方がよいです。
+        </p>
+      </section>
+
+      <section>
+        <h2>セキュリティと公開時の注意</h2>
+        <p>
+          Pagesサイトはインターネット上に公開されます。GitHub公式ドキュメントでも、
+          PagesサイトはリポジトリがPrivateであっても公開される場合があるため、機密情報があるなら公開前に削除するよう注意されています。
+        </p>
+        <p>
+          そのため、公開リポジトリでGitHub Pagesを使う場合は、APIキー、アクセストークン、住所、メールアドレス、
+          仕事の内部情報、非公開資料の内容を置かないことが重要です。
+          一度Gitにコミットした情報は履歴に残るため、後からファイルだけ消しても完全に消えたとは限りません。
+        </p>
+        <p>
+          HTTPSについては、GitHub PagesはHTTPSとHTTPS enforcementをサポートしています。
+          <code>github.io</code> ドメインのPagesサイトはHTTPSで提供されます。
+          ただし、HTML内で <code>http://</code> の画像、CSS、JavaScriptを読み込むと混在コンテンツになり、安全性や表示に問題が出ることがあります。
+        </p>
+      </section>
+
+      <section>
+        <h2>AI Notesで使う意味</h2>
+        <p>
+          AI Notesでは、記事をHTMLファイルとして保存し、<code>index.html</code> からリンクするだけでサイト全体が成り立ちます。
+          GitHub Pagesと相性がよく、ビルドツールやCMSを使わなくても、GitHubへpushするだけで記事を公開できます。
+        </p>
+        <p>
+          その一方で、Public運用にするなら「公開してよい一般知識だけを書く」というルールが重要です。
+          個人的な日記や仕事の内部メモではなく、あとから自分も他人も読める調査記事として残す使い方が安全です。
+        </p>
+      </section>
+
+      <section>
+        <h2>参考URL</h2>
+        <ul class="reference-list">
+          <li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages" rel="noopener">GitHub Docs: What is GitHub Pages?</a></li>
+          <li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site" rel="noopener">GitHub Docs: Configuring a publishing source for your GitHub Pages site</a></li>
+          <li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits" rel="noopener">GitHub Docs: GitHub Pages limits</a></li>
+          <li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/securing-your-github-pages-site-with-https" rel="noopener">GitHub Docs: Securing your GitHub Pages site with HTTPS</a></li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p><a href="../index.html">トップへ戻る</a></p>
+    </div>
+  </footer>
+</body>
+</html>
